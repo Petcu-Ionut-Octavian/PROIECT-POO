@@ -1,4 +1,4 @@
-# Nume proiect: Sistem de gestiune roboți modulari
+# Nume proiect: Fast Food
 
 Scurtă descriere: Aplicație C++ cu ierarhii de clase pentru roboți terestri/aerieni, senzori și misiuni. Demonstrează compunere, moștenire, upcasting/downcasting, excepții, template-uri, STL, și 2 design patterns.
 
