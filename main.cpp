@@ -1,48 +1,79 @@
 #include <iostream>
-#include <array>
+#include <memory>
+#include "meniu.h"
 
 int main() {
-    std::cout << "Hello, world!\n";
-    std::array<int, 100> v{};
-    int nr;
-    std::cout << "Introduceți nr: ";
-    /////////////////////////////////////////////////////////////////////////
-    /// Observație: dacă aveți nevoie să citiți date de intrare de la tastatură,
-    /// dați exemple de date de intrare folosind fișierul tastatura.txt
-    /// Trebuie să aveți în fișierul tastatura.txt suficiente date de intrare
-    /// (în formatul impus de voi) astfel încât execuția programului să se încheie.
-    /// De asemenea, trebuie să adăugați în acest fișier date de intrare
-    /// pentru cât mai multe ramuri de execuție.
-    /// Dorim să facem acest lucru pentru a automatiza testarea codului, fără să
-    /// mai pierdem timp de fiecare dată să introducem de la zero aceleași date de intrare.
-    ///
-    /// Pe GitHub Actions (bife), fișierul tastatura.txt este folosit
-    /// pentru a simula date introduse de la tastatură.
-    /// Bifele verifică dacă programul are erori de compilare, erori de memorie și memory leaks.
-    ///
-    /// Dacă nu puneți în tastatura.txt suficiente date de intrare, îmi rezerv dreptul să vă
-    /// testez codul cu ce date de intrare am chef și să nu pun notă dacă găsesc vreun bug.
-    /// Impun această cerință ca să învățați să faceți un demo și să arătați părțile din
-    /// program care merg (și să le evitați pe cele care nu merg).
-    ///
-    /////////////////////////////////////////////////////////////////////////
-    std::cin >> nr;
-    /////////////////////////////////////////////////////////////////////////
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "v[" << i << "] = ";
-        std::cin >> v[i];
+    FastFoodMenu* menu = FastFoodMenu::getInstance();
+
+
+    bool running = true;
+    while(running){
+        int optiune = 0;
+        std::cout << "\n=== Meniu FastFood ===\n";
+        std::cout << "1. Comanda noua\n";
+        std::cout << "2. Iesire\n";
+        std::cout << "Optiune: ";
+        std::cin >> optiune;
+
+        switch(optiune) {
+            case 1: {
+                std::string numeClient;
+                std::cout << "Introdu numele clientului: ";
+                std::cin >> numeClient;
+                Client client(numeClient);
+
+                bool comandaInCurs = true;
+                while(comandaInCurs) {
+                    int alegereProdus = 0;
+                    std::cout << "\n--- Comanda pentru (cod client) " << numeClient << " ---\n";
+                    std::cout << "1. Adauga Cartofi\n";
+                    std::cout << "2. Adauga Pizza\n";
+                    std::cout << "3. Adauga Shaorma\n";
+                    std::cout << "3. Adauga Hamburger\n";
+                    std::cout << "4. Afiseaza comanda\n";
+                    std::cout << "5. Finalizeaza comanda\n";
+                    std::cout << "6. Anuleaza comanda\n";
+                    std::cout << "Optiune: ";
+                    std::cin >> alegereProdus;
+
+                    switch(alegereProdus) {
+                        case 1:
+                            client.adaugaProdus(std::make_shared<Cartofi>(10.0));
+                            break;
+                        case 2:
+                            client.adaugaProdus(std::make_shared<Pizza>(25.0));
+                            break;
+                        case 3:
+                            client.adaugaProdus(std::make_shared<Shaorma>(20.0));
+                            break;
+                        case 4:
+                            client.afiseazaComanda();
+                            std::cout << "Total: " << client.total() << " lei\n";
+                            break;
+                        case 5:
+                            std::cout << "Comanda finalizata pentru " << numeClient << "!\n";
+                            client.afiseazaComanda();
+                            std::cout << "Total de plata: " << client.total() << " lei\n";
+                            comandaInCurs = false;
+                            break;
+                        case 6:
+                            std::cout << "Comanda anulata!\n";
+                            comandaInCurs = false;
+                            break;
+                        default:
+                            std::cout << "Optiune invalida!\n";
+                    }
+                }
+                break;
+            }
+            case 2: {
+                running = false;
+                std::cout << "La revedere!\n";
+                break;
+            }
+            default:
+                std::cout << "Optiune invalida!\n";
     }
-    std::cout << "\n\n";
-    std::cout << "Am citit de la tastatură " << nr << " elemente:\n";
-    for(int i = 0; i < nr; ++i) {
-        std::cout << "- " << v[i] << "\n";
-    }
-    ///////////////////////////////////////////////////////////////////////////
-    /// Pentru date citite din fișier, NU folosiți tastatura.txt. Creați-vă voi
-    /// alt fișier propriu cu ce alt nume doriți.
-    /// Exemplu:
-    /// std::ifstream fis("date.txt");
-    /// for(int i = 0; i < nr2; ++i)
-    ///     fis >> v2[i];
+
     return 0;
 }
