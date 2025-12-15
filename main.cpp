@@ -21,10 +21,7 @@ int main() {
 
         switch(optiune) {
             case 1: {
-                std::string numeClient;
-                std::cout << "Introdu numele clientului: ";
-                std::cin >> numeClient;
-                Client client(numeClient);
+                Client client();
 
                 bool comandaInCurs = true;
                 while (comandaInCurs) {
