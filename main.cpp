@@ -26,7 +26,7 @@ int main() {
                 bool comandaInCurs = true;
                 while (comandaInCurs) {
                     int alegereProdus = 0;
-                    std::cout << "\n--- Comanda pentru (cod client) " << numeClient << " ---\n";
+                    std::cout << "\n--- Comanda pentru (cod client) " << client.getid() << " ---\n";
                     std::cout << "1. Adauga Cartofi\n";
                     std::cout << "2. Adauga Pizza\n";
                     std::cout << "3. Adauga Shaorma\n";
@@ -75,6 +75,7 @@ int main() {
                 break;
             }
         }
+    }
 
     return 0;
 }
