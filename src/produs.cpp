@@ -4,8 +4,8 @@
 
 #include "produs.h"
 
-ostream& operator<< (ostream& out, Produs ob){
-  ob.afisare();
+ostream& operator<< (ostream& out, Produs& ob){
+  ob.afiseaza();
   return out;
 }
 
@@ -17,3 +17,4 @@ void Produs::setPretBaza(double pret) { pret_baza = pret; }
 void Produs::setNume(const std::string& numeNou) { nume = numeNou; }
 
 void Produs::setCantitate(int grame) { cantitate = grame; }
+
