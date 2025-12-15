@@ -13,6 +13,8 @@ public:
 
     virtual void afiseaza() const = 0; // metodă abstractă
 
+    friend ostream& operator << (ostream& os, Produs& ob);
+
     // Getteri
     double getPretBaza() const;
     std::string getNume() const;
@@ -23,5 +25,6 @@ public:
     void setNume(const std::string& numeNou);
     void setCantitate(int grame);
 };
+
 
 #endif
