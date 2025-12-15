@@ -68,6 +68,13 @@ int main() {
                             std::cout << "Optiune invalida!\n";
                     }
                 }
+            }
+            case 2:{
+                running = false;
+                std::cout<<"Stopping the program\n";
+                break;
+            }
+        }
 
     return 0;
 }
