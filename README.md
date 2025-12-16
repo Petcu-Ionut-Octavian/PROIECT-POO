@@ -1,6 +1,19 @@
-# Nume proiect: Fast Food
+# Nume proiect: Fast Food Smart
 
-Scurtă descriere: Aplicație C++ cu ierarhii de clase pentru roboți terestri/aerieni, senzori și misiuni. Demonstrează compunere, moștenire, upcasting/downcasting, excepții, template-uri, STL, și 2 design patterns.
+Scurtă descriere: 🍔 Fast Food Smart este un proiect C++ conceput pentru a simula un sistem modern de comandă într-un restaurant de tip fast-food, dar cu un accent puternic pe sănătate și personalizare.
+🔑 Funcționalități principale
+- Autentificare utilizatori
+Clienții își pot crea conturi și se pot loga pentru a accesa meniul personalizat.
+- Comandă inteligentă
+Sistemul permite selectarea produselor dorite, dar le adaptează automat în funcție de preferințele și nevoile fiecărui client (ex. reducerea grăsimilor, opțiuni fără zahăr, porții echilibrate).
+- Procesare sănătoasă a alimentelor
+Algoritmul din spate ajustează rețetele pentru a menține gustul, dar să fie mai nutritive și mai potrivite pentru un stil de viață sănătos.
+- Interfață modulară
+Codul este organizat pe clase (produse, utilizatori, comenzi), ceea ce permite extinderea ușoară cu noi tipuri de mâncare sau funcționalități.
+- Experiență personalizată
+Fiecare client primește recomandări bazate pe istoricul comenzilor și preferințele salvate.
+🎯 Obiectiv
+Proiectul îmbină rapiditatea și comoditatea fast-food-ului cu principiile alimentației sănătoase, oferind o experiență digitală prietenoasă și adaptată fiecărui utilizator
 
 ## Instrucțiuni de compilare
 - Configurare:
