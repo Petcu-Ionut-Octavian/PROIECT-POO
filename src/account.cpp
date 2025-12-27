@@ -4,11 +4,12 @@
 
 #include "../include/account.h"
 #include <iostream>
+#include <utility>
 
 // ===================== Account =====================
 
-Account::Account(const std::string& user, const std::string& pass)
-        : username(user), password(pass) {}
+Account::Account(std::string  user, std::string  pass)
+        : username(std::move(user)), password(std::move(pass)) {}
 
 std::string Account::getUsername() const { return username; }
 std::string Account::getPassword() const { return password; }
@@ -32,7 +33,7 @@ void Account::buy() {
         std::cout << "\n=========== CURRENT CART ===========\n";
 
         double preview_total = 0.0;
-        for (auto* it : items) {
+        for (const auto* it : items) {
             it->print();
             std::cout << "\n";
             preview_total += it->price();
@@ -173,7 +174,7 @@ void Account::buy() {
             bool bad = !(*it)->healthy();
             bool sugar_issue = false;
 
-            Drink* d = dynamic_cast<Drink*>(*it);
+            auto* d = dynamic_cast<Drink*>(*it);
             if (d && d->hasSugar())
                 sugar_issue = true;
 

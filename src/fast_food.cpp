@@ -8,7 +8,6 @@
 #include <iostream>
 #include <stdexcept>
 #include <fstream>
-#include <exception>
 
 
 std::vector<Account*> FastFood::accounts;
@@ -294,7 +293,7 @@ void FastFood::play() {
             if (input.size() > 2 || input.empty()) {
                 throw std::invalid_argument("Invalid input!");
             }
-            switch (char choice = input[0]) {
+            switch (input[0]) {
                 case '1': {
                     show_offers();
                     break;

@@ -21,7 +21,7 @@ public:
     virtual ~Account() = default;
 
     // Constructor
-    explicit Account(const std::string& user = "", const std::string& pass = "");
+    explicit Account(std::string  user = "", std::string  pass = "");
 
     // Getters
     [[nodiscard]] std::string getUsername() const;
@@ -39,7 +39,7 @@ public:
 
 };
 
-class Kid_account : public Account {
+class Kid_account final : public Account {
 public:
     explicit Kid_account(const std::string& user = "", const std::string& pass = "");
 
@@ -47,14 +47,14 @@ public:
 
 };
 
-class Adult_account : public Account {
+class Adult_account final : public Account {
 public:
     explicit Adult_account(const std::string& user = "", const std::string& pass = "");
 
     void play() override;
 };
 
-class Special_account : public Account {
+class Special_account final : public Account {
 public:
     explicit Special_account(const std::string& user = "", const std::string& pass = "");
 
