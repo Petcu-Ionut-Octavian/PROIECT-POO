@@ -22,11 +22,30 @@ bool Account::login(const std::string& user, const std::string& pass) const {
 
 void Account::buy() {
 
-// add to ask before removing items
-
     bool buying = true;
 
     while (buying) {
+
+        // ============================
+        // LIVE CART PREVIEW (before menu)
+        // ============================
+        std::cout << "\n=========== CURRENT CART ===========\n";
+
+        double preview_total = 0.0;
+        for (auto* it : items) {
+            it->print();
+            std::cout << "\n";
+            preview_total += it->price();
+        }
+
+        std::cout << "------------------------------------\n";
+        std::cout << "TOTAL SO FAR: " << preview_total << "$\n";
+        std::cout << "====================================\n\n";
+
+
+        // ============================
+        // MENU
+        // ============================
         std::cout << "==================== MENU ====================\n";
         std::cout << "1. Cola           (500 ml)\n";
         std::cout << "2. Orange Juice   (300 ml)\n";
@@ -48,131 +67,157 @@ void Account::buy() {
 
         Item* item = nullptr;
 
+        // ============================
+        // SINGLE ITEMS
+        // ============================
         if (input == "1") item = new Cola();
         else if (input == "2") item = new Orange_juce();
         else if (input == "3") item = new Water();
         else if (input == "4") item = new Hamburger();
         else if (input == "5") item = new Pizza();
         else if (input == "6") item = new Fries();
+
+        // ============================
+        // COMBO
+        // ============================
         else if (input == "8") {
-                std::cout << "\n=== COMBO MENU ===\n";
 
-                std::cout << "Pick FIRST item:\n";
-                std::cout << "1. Cola\n2. Orange Juice\n3. Water\n4. Hamburger\n5. Pizza\n6. Fries\n";
-                std::cout << "Choice: ";
+            std::cout << "\n=== COMBO MENU ===\n";
 
-                std::string c1;
-                std::getline(std::cin, c1);
+            std::cout << "Pick FIRST item:\n";
+            std::cout << "1. Cola\n2. Orange Juice\n3. Water\n4. Hamburger\n5. Pizza\n6. Fries\n";
+            std::cout << "Choice: ";
 
-                std::cout << "Pick SECOND item:\n";
-                std::cout << "1. Cola\n2. Orange Juice\n3. Water\n4. Hamburger\n5. Pizza\n6. Fries\n";
-                std::cout << "Choice: ";
+            std::string c1;
+            std::getline(std::cin, c1);
 
-                std::string c2;
-                std::getline(std::cin, c2);
+            std::cout << "Pick SECOND item:\n";
+            std::cout << "1. Cola\n2. Orange Juice\n3. Water\n4. Hamburger\n5. Pizza\n6. Fries\n";
+            std::cout << "Choice: ";
 
-                Item* itemA = nullptr;
-                Item* itemB = nullptr;
+            std::string c2;
+            std::getline(std::cin, c2);
 
-                // FIRST ITEM
-                if (c1 == "1") itemA = new Cola();
-                else if (c1 == "2") itemA = new Orange_juce();
-                else if (c1 == "3") itemA = new Water();
-                else if (c1 == "4") itemA = new Hamburger();
-                else if (c1 == "5") itemA = new Pizza();
-                else if (c1 == "6") itemA = new Fries();
+            Item* itemA = nullptr;
+            Item* itemB = nullptr;
 
-                // SECOND ITEM
-                if (c2 == "1") itemB = new Cola();
-                else if (c2 == "2") itemB = new Orange_juce();
-                else if (c2 == "3") itemB = new Water();
-                else if (c2 == "4") itemB = new Hamburger();
-                else if (c2 == "5") itemB = new Pizza();
-                else if (c2 == "6") itemB = new Fries();
+            if (c1 == "1") itemA = new Cola();
+            else if (c1 == "2") itemA = new Orange_juce();
+            else if (c1 == "3") itemA = new Water();
+            else if (c1 == "4") itemA = new Hamburger();
+            else if (c1 == "5") itemA = new Pizza();
+            else if (c1 == "6") itemA = new Fries();
 
-                if (!itemA || !itemB) {
-                    std::cout << "Invalid combo selection!\n\n";
-                    delete itemA;
-                    delete itemB;
-                    continue;
-                }
+            if (c2 == "1") itemB = new Cola();
+            else if (c2 == "2") itemB = new Orange_juce();
+            else if (c2 == "3") itemB = new Water();
+            else if (c2 == "4") itemB = new Hamburger();
+            else if (c2 == "5") itemB = new Pizza();
+            else if (c2 == "6") itemB = new Fries();
 
-                items.push_back(itemA);
-                items.push_back(itemB);
+            if (!itemA || !itemB) {
+                std::cout << "Invalid combo selection!\n\n";
+                delete itemA;
+                delete itemB;
+                continue;
+            }
 
-                std::cout << "Combo added!\n\n";
-                continue; // go back to menu
-        } else {
+            items.push_back(new Combo<Item, Item>(itemA, itemB));
+
+
+            std::cout << "Combo added!\n\n";
+            continue;
+        }
+
+        else {
             std::cout << "Invalid choice!\n\n";
             continue;
         }
 
         items.push_back(item);
         std::cout << "Item added!\n\n";
-        std::cout << "=========== ITEMS YOU BOUGHT ===========\n";
-
-        double total = 0.0;
-
-        for (auto* item : items) {
-
-            // DRINKS
-            if (auto* c = dynamic_cast<Cola*>(item)) {
-                std::cout << "Cola " << c->getGrams() << " ml ---- " << c->price() << "$\n";
-                total += c->price();
-            }
-            else if (auto* o = dynamic_cast<Orange_juce*>(item)) {
-                std::cout << "Orange Juice " << o->getGrams() << " ml ---- " << o->price() << "$\n";
-                total += o->price();
-            }
-            else if (auto* w = dynamic_cast<Water*>(item)) {
-                std::cout << "Water " << w->getGrams() << " ml ---- " << w->price() << "$\n";
-                total += w->price();
-            }
-
-            // FOODS
-            else if (auto* h = dynamic_cast<Hamburger*>(item)) {
-                std::cout << "Hamburger " << h->getGrams() << " g ---- " << h->price() << "$\n";
-                total += h->price();
-            }
-            else if (auto* p = dynamic_cast<Pizza*>(item)) {
-                std::cout << "Pizza Slice " << p->getGrams() << " g ---- " << p->price() << "$\n";
-                total += p->price();
-            }
-            else if (auto* f = dynamic_cast<Fries*>(item)) {
-                std::cout << "Fries " << f->getGrams() << " g ---- " << f->price() << "$\n";
-                total += f->price();
-            }
-        }
-
-        std::cout << "----------------------------------------\n";
-        std::cout << "TOTAL: " << total << "$\n";
-        std::cout << "========================================\n";
-
     }
 
     // ============================
     // APPLY ACCOUNT RESTRICTIONS
     // ============================
 
-    // KID ACCOUNT → no spicy foods
     if (dynamic_cast<const Kid_account*>(this)) {
         for (auto it = items.begin(); it != items.end();) {
-            Food* f = dynamic_cast<Food*>(*it);
-            if (f && f->healthy() == false) { // spicy or unhealthy
-                std::cout << "Kid restriction: removing spicy/unhealthy food.\n";
-                delete *it;
-                it = items.erase(it);
-            } else {
+
+            if (!(*it)->healthy()) {
+                std::cout << "Kid restriction: ";
+                (*it)->print();
+                std::cout << " is unhealthy.\n";
+
+                std::string choice;
+                std::cout << "Remove this item? (yes/no): ";
+                std::getline(std::cin, choice);
+
+                if (choice == "yes" || choice == "y") {
+                    delete *it;
+                    it = items.erase(it);
+                } else {
+                    ++it;
+                }
+            }
+            else {
                 ++it;
             }
         }
     }
 
-    // SPECIAL ACCOUNT → no unhealthy items (sugar drinks OR spicy foods)
     if (dynamic_cast<const Special_account*>(this)) {
         for (auto it = items.begin(); it != items.end();) {
-            if (!(*it)->healthy()) {
-                std::cout << "Special restriction: removing unhealthy item.\n";
+
+            bool bad = !(*it)->healthy();
+            bool sugar_issue = false;
+
+            Drink* d = dynamic_cast<Drink*>(*it);
+            if (d && d->hasSugar())
+                sugar_issue = true;
+
+            if (!bad && !sugar_issue) {
+                ++it;
+                continue;
+            }
+
+            if (sugar_issue) {
+                std::cout << "Special restriction: ";
+                (*it)->print();
+                std::cout << " has sugar.\n";
+
+                std::string choice;
+                std::cout << "Remove item or make it sugar-free? (remove/sugar): ";
+                std::getline(std::cin, choice);
+
+                if (choice == "remove") {
+                    delete *it;
+                    it = items.erase(it);
+                    continue;
+                }
+                else if (choice == "sugar") {
+                    d->setSugar(false);
+                    std::cout << "Updated to sugar-free.\n";
+                    ++it;
+                    continue;
+                }
+                else {
+                    std::cout << "Invalid choice. Keeping item.\n";
+                    ++it;
+                    continue;
+                }
+            }
+
+            std::cout << "Special restriction: ";
+            (*it)->print();
+            std::cout << " is unhealthy.\n";
+
+            std::string choice;
+            std::cout << "Remove this item? (yes/no): ";
+            std::getline(std::cin, choice);
+
+            if (choice == "yes" || choice == "y") {
                 delete *it;
                 it = items.erase(it);
             } else {
@@ -181,49 +226,22 @@ void Account::buy() {
         }
     }
 
-    // ADULT ACCOUNT → no restrictions
+    // ============================
+    // FINAL CART PRINT
+    // ============================
 
-
-    std::cout << "=========== ITEMS YOU BOUGHT ===========\n";
+    std::cout << "\n=========== FINAL CART ===========\n";
 
     double total = 0.0;
-
-    for (auto* item : items) {
-
-        // DRINKS
-        if (auto* c = dynamic_cast<Cola*>(item)) {
-            std::cout << "Cola " << c->getGrams() << " ml ---- " << c->price() << "$\n";
-            total += c->price();
-        }
-        else if (auto* o = dynamic_cast<Orange_juce*>(item)) {
-            std::cout << "Orange Juice " << o->getGrams() << " ml ---- " << o->price() << "$\n";
-            total += o->price();
-        }
-        else if (auto* w = dynamic_cast<Water*>(item)) {
-            std::cout << "Water " << w->getGrams() << " ml ---- " << w->price() << "$\n";
-            total += w->price();
-        }
-
-        // FOODS
-        else if (auto* h = dynamic_cast<Hamburger*>(item)) {
-            std::cout << "Hamburger " << h->getGrams() << " g ---- " << h->price() << "$\n";
-            total += h->price();
-        }
-        else if (auto* p = dynamic_cast<Pizza*>(item)) {
-            std::cout << "Pizza Slice " << p->getGrams() << " g ---- " << p->price() << "$\n";
-            total += p->price();
-        }
-        else if (auto* f = dynamic_cast<Fries*>(item)) {
-            std::cout << "Fries " << f->getGrams() << " g ---- " << f->price() << "$\n";
-            total += f->price();
-        }
+    for (auto* it : items) {
+        it->print();
+        std::cout << "\n";
+        total += it->price();
     }
 
-    std::cout << "----------------------------------------\n";
+    std::cout << "----------------------------------\n";
     std::cout << "TOTAL: " << total << "$\n";
-    std::cout << "========================================\n";
-
-
+    std::cout << "==================================\n";
 }
 
 

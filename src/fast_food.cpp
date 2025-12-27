@@ -96,41 +96,136 @@ void FastFood::create_account() {
     std::string username, password, type;
 
     std::cout << "   Creating new account\n";
-    std::cout << "Enter username: ";
-    std::getline(std::cin, username);
 
-    std::cout << "Enter password: ";
-    std::getline(std::cin, password);
+    // ============================
+    // USERNAME
+    // ============================
+    while (true) {
+        try {
+            std::cout << "Enter username: ";
+            std::getline(std::cin, username);
 
-    std::cout << "Enter type (kid/adult/special): ";
-    std::getline(std::cin, type);
+            if (username.empty())
+                throw invalid_input("Username cannot be empty!");
 
-    if (username.empty() || password.empty() ||
-        !(type == "kid" || type == "adult" || type == "special")) {
-        std::cout << "Invalid input!\n\n";
-        return;
+            // Check duplicate
+            for (auto acc : accounts) {
+                if (acc->getUsername() == username)
+                    throw invalid_input("Username already exists!");
+            }
+
+            break; // valid username
         }
-
-    // Check duplicate
-    for (auto acc : accounts) {
-        if (acc->getUsername() == username) {
-            std::cout << "Username already exists!\n\n";
-            return;
+        catch (const invalid_input& e) {
+            std::cout << e.what() << "\nTry again.\n\n";
         }
     }
 
+    // ============================
+    // PASSWORD
+    // ============================
+    while (true) {
+        try {
+            std::cout << "Enter password: ";
+            std::getline(std::cin, password);
+
+            if (password.empty())
+                throw invalid_input("Password cannot be empty!");
+
+            break;
+        }
+        catch (const invalid_input& e) {
+            std::cout << e.what() << "\nTry again.\n\n";
+        }
+    }
+
+    // ============================
+    // AGE
+    // ============================
+    int age = 0;
+    while (true) {
+        try {
+            std::string ageStr;
+            std::cout << "Enter your age: ";
+            std::getline(std::cin, ageStr);
+
+            if (ageStr.empty())
+                throw invalid_input("Age cannot be empty!");
+
+            age = std::stoi(ageStr);
+
+            if (age <= 0 || age > 120)
+                throw invalid_age("Age must be between 1 and 120!");
+
+            break;
+        }
+        catch (const invalid_input& e) {
+            std::cout << e.what() << "\nTry again.\n\n";
+        }
+        catch (const invalid_age& e) {
+            std::cout << e.what() << "\nTry again.\n\n";
+        }
+        catch (...) {
+            std::cout << "Invalid age format!\nTry again.\n\n";
+        }
+    }
+
+    // ============================
+    // HEALTH CONDITION
+    // ============================
+    bool special_condition = false;
+
+    while (true) {
+        try {
+            std::string healthStr;
+            std::cout << "Do you have a special health condition? (yes/no): ";
+            std::getline(std::cin, healthStr);
+
+            if (healthStr == "yes" || healthStr == "Yes" || healthStr == "y")
+                special_condition = true;
+            else if (healthStr == "no" || healthStr == "No" || healthStr == "n")
+                special_condition = false;
+            else
+                throw invalid_input("Please answer yes or no!");
+
+            break;
+        }
+        catch (const invalid_input& e) {
+            std::cout << e.what() << "\nTry again.\n\n";
+        }
+    }
+
+    // ============================
+    // DETERMINE ACCOUNT TYPE
+    // ============================
+    if (special_condition)
+        type = "special";
+    else if (age < 18)
+        type = "kid";
+    else
+        type = "adult";
+
+    std::cout << "Account type detected: " << type << "\n";
+
+    // ============================
+    // CREATE ACCOUNT OBJECT
+    // ============================
     Account* newAcc = nullptr;
+
     if (type == "kid") newAcc = new Kid_account(username, password);
     else if (type == "adult") newAcc = new Adult_account(username, password);
     else newAcc = new Special_account(username, password);
 
     accounts.push_back(newAcc);
 
-    // Append to file
+    // ============================
+    // SAVE TO FILE
+    // ============================
     std::ofstream file("../database/accounts.txt", std::ios::app);
     if (!file.is_open()) {
         throw std::runtime_error("Could not open accounts.txt");
     }
+
     file << username << " " << password << " " << type << "\n";
 
     std::cout << "Account created successfully!\n\n";

@@ -1,7 +1,3 @@
-//
-// Created by User on 12/16/2025.
-//
-
 #ifndef FAST_FOOD_EXCEPTIONS_H
 #define FAST_FOOD_EXCEPTIONS_H
 
@@ -14,6 +10,16 @@ public:
     explicit invalid_login(const std::string& msg);
 };
 
+// Custom exception for invalid general input
+class invalid_input final : public std::runtime_error {
+public:
+    explicit invalid_input(const std::string& msg);
+};
 
+// Custom exception for invalid age
+class invalid_age final : public std::runtime_error {
+public:
+    explicit invalid_age(const std::string& msg);
+};
 
-#endif //FAST_FOOD_EXCEPTIONS_H
+#endif // FAST_FOOD_EXCEPTIONS_H

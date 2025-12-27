@@ -9,11 +9,13 @@ Item::~Item() = default;
 
 double Item::getGrams() const { return grams; }
 
+
+
 // ============================================================
 // Drink
 // ============================================================
 
-Drink::Drink(const double grams, bool sugar)
+Drink::Drink(const double grams, const bool sugar)
     : Item(grams), sugar(sugar) {}
 
 Drink::~Drink() = default;
@@ -118,8 +120,33 @@ bool Fries::healthy() const {
 }
 
 
-void Drink::setSugar(bool s) { sugar = s; }
-bool Drink::getSugar() const { return sugar; }
+void Drink::setSugar(const bool s) { sugar = s; }
+bool Drink::hasSugar() const { return sugar; }
 
-void Food::setSpicy(bool s) { spicy_sauce = s; }
+void Food::setSpicy(const bool s) { spicy_sauce = s; }
 bool Food::getSpicy() const { return spicy_sauce; }
+
+
+void Cola::print() const {
+    std::cout << "Cola " << grams << " ml ---- " << price() << "$";
+}
+
+void Orange_juce::print() const {
+    std::cout << "Orange Juice " << grams << " ml ---- " << price() << "$";
+}
+
+void Water::print() const {
+    std::cout << "Water " << grams << " ml ---- " << price() << "$";
+}
+
+void Hamburger::print() const {
+    std::cout << "Hamburger " << grams << " g ---- " << price() << "$";
+}
+
+void Pizza::print() const {
+    std::cout << "Pizza Slice " << grams << " g ---- " << price() << "$";
+}
+
+void Fries::print() const {
+    std::cout << "Fries " << grams << " g ---- " << price() << "$";
+}

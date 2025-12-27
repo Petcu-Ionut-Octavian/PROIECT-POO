@@ -23,6 +23,9 @@ public:
     [[nodiscard]] virtual bool healthy() const = 0;
 
     [[nodiscard]] double getGrams () const ;
+
+    virtual void print() const = 0;
+
 };
 
 // ============================================================
@@ -39,7 +42,7 @@ public:
 
     // NEW:
     void setSugar(bool s);
-    [[nodiscard]] bool getSugar() const;
+    [[nodiscard]] bool hasSugar() const;
 };
 
 // Cola --------------------------------------------------------
@@ -51,6 +54,8 @@ public:
 
     [[nodiscard]] double price() const override;
     [[nodiscard]] bool healthy() const override;
+
+    void print() const override;
 };
 
 // Orange Juice ------------------------------------------------
@@ -62,6 +67,8 @@ public:
 
     [[nodiscard]] double price() const override;
     [[nodiscard]] bool healthy() const override;
+
+    void print() const;
 };
 
 // Water -------------------------------------------------------
@@ -73,6 +80,8 @@ public:
 
     [[nodiscard]] double price() const override;
     [[nodiscard]] bool healthy() const override;
+
+    void print() const override;
 };
 
 // ============================================================
@@ -101,6 +110,8 @@ public:
 
     [[nodiscard]] double price() const override;
     [[nodiscard]] bool healthy() const override;
+
+    void print() const override;
 };
 
 // Pizza -------------------------------------------------------
@@ -112,6 +123,8 @@ public:
 
     [[nodiscard]] double price() const override;
     [[nodiscard]] bool healthy() const override;
+
+    void print() const override;
 };
 
 // Fries -------------------------------------------------------
@@ -123,6 +136,8 @@ public:
 
     [[nodiscard]] double price() const override;
     [[nodiscard]] bool healthy() const override;
+
+    void print() const override;
 };
 
 #endif // FAST_FOOD_ITEMS_H
