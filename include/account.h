@@ -18,6 +18,8 @@ protected:
     std::vector<Item*> items;
 
 public:
+    virtual ~Account() = default;
+
     // Constructor
     explicit Account(const std::string& user = "", const std::string& pass = "");
 

@@ -16,8 +16,21 @@ public:
         delete item2;
     }
 
-    [[nodiscard]]  double price() const override {
-        return item1->price() + item2->price();
+    [[nodiscard]] double price() const override {
+        double base = item1->price() + item2->price();
+
+        bool isFood1  = dynamic_cast<Food*>(item1)  != nullptr;
+        bool isFood2  = dynamic_cast<Food*>(item2)  != nullptr;
+        bool isDrink1 = dynamic_cast<Drink*>(item1) != nullptr;
+        bool isDrink2 = dynamic_cast<Drink*>(item2) != nullptr;
+
+        // Food + Food OR Drink + Drink → 10% reducere
+        if ((isFood1 && isFood2) || (isDrink1 && isDrink2)) {
+            return base * 0.90;
+        }
+
+        // Food + Drink OR Drink + Food → 15% reducere
+        return base * 0.85;
     }
 
     [[nodiscard]]  bool healthy() const override {

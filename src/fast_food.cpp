@@ -57,15 +57,17 @@ void FastFood::show_menu() {
 }
 
 void FastFood::show_offers() {
-    std::cout <<"############################################\n";
-    std::cout<< "                -Offers-               \n";
-    std::cout<< "1. Combo drink - drink \n";
-    std::cout<< "2. Combo drink - hamburger\n";
-    std::cout<< "3. Combo drink - pizza\n";
-    std::cout<< "4. Combo drink - souce\n\n";
-    std::cout<< "Press enter to continue: ";
+    std::cout << "############################################\n";
+    std::cout << "                 - Offers -                 \n";
+    std::cout << "                                            \n";
+    std::cout << "1. Combo: Drink + Drink      (10% OFF)\n";
+    std::cout << "2. Combo: Food + Food        (10% OFF)\n";
+    std::cout << "3. Combo: Drink + Food       (15% OFF)\n";
+    std::cout << "4. Combo: Food + Drink       (15% OFF)\n";
+    std::cout << "                                            \n";
+    std::cout << "Press ENTER to continue: ";
     std::cin.ignore(100, '\n');
-    std::cout<< "\n";
+    std::cout << "\n";
 }
 
 void FastFood::login() {
