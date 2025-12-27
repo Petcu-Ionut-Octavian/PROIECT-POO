@@ -1,48 +1,98 @@
-# Nume proiect: Fast Food Smart
+🍔 Fast‑Food Ordering System — Code Description
+🎯 Overview
+This project implements a modular, object‑oriented Fast‑Food ordering system in C++.
+It allows users to purchase individual items (drinks and foods), create discounted combos, and apply account‑specific dietary restrictions.
+The system is fully polymorphic, memory‑safe, and designed for extensibility.
 
-Scurtă descriere: 🍔 Fast Food Smart este un proiect C++ conceput pentru a simula un sistem modern de comandă într-un restaurant de tip fast-food, dar cu un accent puternic pe sănătate și personalizare.
-🔑 Funcționalități principale
-- Autentificare utilizatori
-Clienții își pot crea conturi și se pot loga pentru a accesa meniul personalizat.
-- Comandă inteligentă
-Sistemul permite selectarea produselor dorite, dar le adaptează automat în funcție de preferințele și nevoile fiecărui client (ex. reducerea grăsimilor, opțiuni fără zahăr, porții echilibrate).
-- Procesare sănătoasă a alimentelor
-Algoritmul din spate ajustează rețetele pentru a menține gustul, dar să fie mai nutritive și mai potrivite pentru un stil de viață sănătos.
-- Interfață modulară
-Codul este organizat pe clase (produse, utilizatori, comenzi), ceea ce permite extinderea ușoară cu noi tipuri de mâncare sau funcționalități.
-- Experiență personalizată
-Fiecare client primește recomandări bazate pe istoricul comenzilor și preferințele salvate.
-🎯 Obiectiv
-Proiectul îmbină rapiditatea și comoditatea fast-food-ului cu principiile alimentației sănătoase, oferind o experiență digitală prietenoasă și adaptată fiecărui utilizator
+🧱 Architecture
+1. Item Hierarchy
+At the core of the system is the abstract base class:
+class Item {
+    virtual double price() const = 0;
+    virtual bool healthy() const = 0;
+    virtual void print() const = 0;
+};
 
-## Instrucțiuni de compilare
-- Configurare:
-  - Linux/macOS/MSVC: `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug`
-  - Windows GCC + Ninja: `cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -G Ninja`
-- Build: `cmake --build build --config Debug --parallel 6`
-- Install (opțional): `cmake --install build --config Debug --prefix install_dir`
-- Rulează: `./build/oop` sau `./install_dir/bin/oop`
 
-## Cerințe și conformitate
-- C++ (fără variabile globale, membri private/protected)
-- Meniu interactiv în `main.cpp`
-- Separare .hpp/.cpp
-- GitHub Actions: build & run (fără erori)
-- Operatorii: `<<`, `>>`, `=`, alți operatori membru + non-membru
-- Ierarhii: min. 2-3, cu upcast/downcast și destructor virtual
-- Excepții: bază std::exception, propagare și upcasting în catch
-- Template: 1 clasă, 2 instanțieri
-- STL: 2 containere + 1 algoritm cu lambda
-- Design Patterns: 2 (ex. Factory + Strategy)
+Every product in the system inherits from Item, ensuring:
+- consistent interface
+- polymorphic behavior
+- clean printing
+- unified price calculation
+Drink subclasses
+- Cola
+- Orange_juce
+- Water
+Each drink stores:
+- volume (ml)
+- sugar flag
+- price calculation
+- health evaluation
+Food subclasses
+- Hamburger
+- Pizza
+- Fries
+Each food stores:
+- weight (g)
+- spicy/unhealthy flag
+- price calculation
+- health evaluation
 
-## Date de intrare
-- Interactiv: `tastatura.txt` (exemple)
-- Fișiere externe: `data/*.txt` (unde e cazul)
+2. Combo System
+The Combo<T1, T2> template class allows combining any two Item objects into a single discounted product.
+Key features:
+- Stores Item* pointers (avoids slicing)
+- Owns and deletes its items safely
+- Applies automatic discounts:
+- 10% for same‑type combos (Drink+Drink or Food+Food)
+- 15% for mixed combos (Drink+Food or Food+Drink)
+- Fully polymorphic: behaves like any other Item
 
-## Resurse
-- Linkuri și note despre materialele folosite.
+3. Account Types
+The system supports three account categories:
+Kid_account
+- Cannot purchase unhealthy/spicy foods
+- System asks whether to remove restricted items
+Special_account
+- Cannot consume sugar or unhealthy foods
+- For sugary drinks, user may:
+- remove the item
+- convert it to sugar‑free
+Adult_account
+- No restrictions
+Each account type inherits from Account and uses runtime polymorphism (dynamic_cast) to enforce rules.
 
-* În general, acestea sunt prezente în [CppCoreGuideline](https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md), dar nu e nevoie să parcurgeți documentul, doar să scrieți codul suficient de organizat
+4. Buying Workflow
+The Account::buy() function handles the entire user interaction:
+Features:
+- Live cart preview before each menu display
+- Menu for selecting:
+- individual items
+- combos
+- Items stored in std::vector<Item*>
+- After buying, restrictions are applied
+- Final cart is printed with total price
+The system ensures:
+- no memory leaks
+- no double deletes
+- correct polymorphic behavior
 
-* folderele `build/` și `install_dir/` sunt adăugate în fișierul `.gitignore` deoarece
-conțin fișiere generate și nu ne ajută să le versionăm.
+5. Offers Menu
+The FastFood::show_offers() function displays predefined combo offers:
+- Drink + Drink (10% OFF)
+- Drink + Food (15% OFF)
+- Food + Drink (15% OFF)
+- Food + Food (10% OFF)
+These offers match the discount logic implemented in Combo::price().
+
+🧠 Design Strengths
+✔ Strong OOP design
+Clear separation of concerns, polymorphism, and virtual functions.
+✔ Extensible
+Adding new items or account types requires minimal changes.
+✔ Safe memory management
+Combos own their items; accounts delete purchased items.
+✔ Realistic dietary restrictions
+Kid and special accounts enforce health rules interactively.
+✔ Clean user experience
+Live cart preview, readable menus, and consistent formatting.
