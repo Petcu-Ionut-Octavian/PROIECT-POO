@@ -10,6 +10,7 @@
 
 #include "account.h"
 
+
 class FastFood {
 private:
     static std::vector<Account*> accounts;
@@ -29,6 +30,9 @@ public:
     static void show_offers();
     static void login();
     static void play();
+    static void create_account();
+    static void delete_account();
+
 };
 
 

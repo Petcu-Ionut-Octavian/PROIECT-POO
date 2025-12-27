@@ -10,6 +10,7 @@
 #include <fstream>
 #include <exception>
 
+
 std::vector<Account*> FastFood::accounts;
 
 // Constructor privat
@@ -44,21 +45,24 @@ FastFood& FastFood::getInstance() {
 }
 
 void FastFood::show_menu() {
-    std::cout<< "        -Main Menu-        \n";
-    std::cout<< "1. See offers             \n";
-    std::cout<< "2. Login                  \n";
-    std::cout<< "3. Create costumer account \n";
-    std::cout<< "4. Delete costumer account \n";
-    std::cout<< "5. Quit                    \n\n";
+    std::cout <<"############################################\n";
+    std::cout<< "#                -Main Menu-               #\n";
+    std::cout<< "# 1. See offers                            #\n";
+    std::cout<< "# 2. Login                                 #\n";
+    std::cout<< "# 3. Create costumer account               #\n";
+    std::cout<< "# 4. Delete costumer account               #\n";
+    std::cout<< "# 5. Quit                                  #\n";
+    std::cout<< "############################################\n\n";
     std::cout<< "Enter your choice: ";
 }
 
 void FastFood::show_offers() {
-    std::cout<< "        -Offers-        \n";
-    std::cout<< "1.  \n";
-    std::cout<< "2.  \n";
-    std::cout<< "3.  \n";
-    std::cout<< "4.  \n\n";
+    std::cout <<"############################################\n";
+    std::cout<< "                -Offers-               \n";
+    std::cout<< "1. Combo drink - drink \n";
+    std::cout<< "2. Combo drink - hamburger\n";
+    std::cout<< "3. Combo drink - pizza\n";
+    std::cout<< "4. Combo drink - souce\n\n";
     std::cout<< "Press enter to continue: ";
     std::cin.ignore(100, '\n');
     std::cout<< "\n";
@@ -78,19 +82,112 @@ void FastFood::login() {
         if (account->login(username, password)) {
             std::cout<< "You logged in \n\n";
             valid_login = true;
-            account.play();  //to do
+            account->play();
             break;
         }
     }
     if (!valid_login) {
-        throw std::runtime_error("Login failed");
+        throw invalid_login("Login failed");
     }
 
 }
 
+void FastFood::create_account() {
+    std::string username, password, type;
+
+    std::cout << "   Creating new account\n";
+    std::cout << "Enter username: ";
+    std::getline(std::cin, username);
+
+    std::cout << "Enter password: ";
+    std::getline(std::cin, password);
+
+    std::cout << "Enter type (kid/adult/special): ";
+    std::getline(std::cin, type);
+
+    if (username.empty() || password.empty() ||
+        !(type == "kid" || type == "adult" || type == "special")) {
+        std::cout << "Invalid input!\n\n";
+        return;
+        }
+
+    // Check duplicate
+    for (auto acc : accounts) {
+        if (acc->getUsername() == username) {
+            std::cout << "Username already exists!\n\n";
+            return;
+        }
+    }
+
+    Account* newAcc = nullptr;
+    if (type == "kid") newAcc = new Kid_account(username, password);
+    else if (type == "adult") newAcc = new Adult_account(username, password);
+    else newAcc = new Special_account(username, password);
+
+    accounts.push_back(newAcc);
+
+    // Append to file
+    std::ofstream file("../database/accounts.txt", std::ios::app);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open accounts.txt");
+    }
+    file << username << " " << password << " " << type << "\n";
+
+    std::cout << "Account created successfully!\n\n";
+}
+
+void FastFood::delete_account() {
+    std::string username, password;
+
+    std::cout << "   Deleting account\n";
+    std::cout << "Enter username: ";
+    std::getline(std::cin, username);
+
+    std::cout << "Enter password: ";
+    std::getline(std::cin, password);
+
+    bool found = false;
+
+    for (auto it = accounts.begin(); it != accounts.end(); ++it) {
+        if ((*it)->getUsername() == username &&
+            (*it)->login(username,password)) {
+
+            delete *it;
+            accounts.erase(it);
+            found = true;
+            break;
+            }
+    }
+
+    if (!found) {
+        std::cout << "Account not found or wrong password!\n\n";
+        return;
+    }
+
+    // Rewrite entire file
+    std::ofstream file("../database/accounts.txt");
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open accounts.txt");
+    }
+
+    for (auto acc : accounts) {
+
+        std::string type;
+        if (dynamic_cast<Kid_account*>(acc)) type = "kid";
+        if (dynamic_cast<Adult_account*>(acc)) type = "adult";
+        if (dynamic_cast<Special_account*>(acc)) type = "special";
+
+
+        file << acc->getUsername() << " "
+             << acc->getPassword() << " "
+             << type << "\n";
+    }
+
+    std::cout << "Account deleted successfully!\n\n";
+}
+
 void FastFood::play() {
     bool running = true;
-    std::cout << "Welcome to Fast Food Smart!\n\n";
     std::string input;
     while (running) {
         show_menu();
@@ -110,11 +207,12 @@ void FastFood::play() {
                     break;
                 }
                 case '3': {
-                    create_account(); //to do
+                    create_account();
                     break;
                 }
                 case '4': {
-                    delete_account(); //to do
+                    delete_account();
+                    break;
                 }
                 case '5': {
                     std::cout<< "Quitting...\n";

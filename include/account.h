@@ -6,11 +6,16 @@
 #define FAST_FOOD_ACCOUNT_H
 
 #include <string>
+#include <vector>
+#include "items.h"
+#include "combo.h"
 
 class Account {
-private:
+protected:
     std::string username;
     std::string password;
+
+    std::vector<Item*> items;
 
 public:
     // Constructor
@@ -26,11 +31,17 @@ public:
 
     // Utility
     [[nodiscard]] bool login(const std::string& user, const std::string& pass) const;
+
+    virtual void play() = 0;
+    void buy();
+
 };
 
 class Kid_account : public Account {
 public:
     explicit Kid_account(const std::string& user = "", const std::string& pass = "");
+
+    void play() override;
 
 };
 
@@ -38,12 +49,14 @@ class Adult_account : public Account {
 public:
     explicit Adult_account(const std::string& user = "", const std::string& pass = "");
 
+    void play() override;
 };
 
 class Special_account : public Account {
 public:
     explicit Special_account(const std::string& user = "", const std::string& pass = "");
 
+    void play() override;
 };
 
 #endif //FAST_FOOD_ACCOUNT_H

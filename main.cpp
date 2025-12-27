@@ -8,8 +8,11 @@ int main() {
     try {
         FastFood::getInstance();
         FastFood::play();
+
     } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
+    } catch (...) {
+        std::cout << "unknown exception" << std::endl;
     }
 
     return 0;
